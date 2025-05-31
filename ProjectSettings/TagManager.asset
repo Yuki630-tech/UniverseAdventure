@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - PlayerEyes
+  - Planet
+  - Ground
+  - TrapGoal
+  - HipDrop
+  - Gravity
+  - TekkyuDestroy
+  - Wall
+  - BlackHole
+  - Damage
+  - Stage11Start
+  - Stage11
+  - Stage12
+  - Stage12Start
+  - Stage0
+  - Stage0Start
+  - Stage2
+  - Stage2Start
+  - Goal
+  - Stage13
+  - Stage13Start
+  - PlayerAttack
+  - Stage2Quit
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - GravityInverseTrap
+  - Water
+  - UI
+  - Ground
+  - Planet
+  - Player
+  - LazerSpawner
+  - TekkyuWall
+  - Tekkyu
+  - Enemy
+  - StarChip
+  - SmallPlanet
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
