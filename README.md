@@ -11,7 +11,7 @@
 |移動|WSAD|左スティック|
 |カメラ|↑↓←→|右スティック|
 |ヒップドロップ|Fキー|RT|
-|ジャンプ|Spaceキー|! [Bボタン](SouthButton.png =100*100)
+|ジャンプ|Spaceキー|! [Bボタン](SouthButton.png =100×100)
 |ゲームポーズ|Tabキー|Startボタン
 
 
