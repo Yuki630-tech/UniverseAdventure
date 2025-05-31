@@ -17,5 +17,7 @@
 |ジャンプ|Spaceキー|![Bボタン](SouthButton.png)
 |ゲームポーズ|Tabキー|Startボタン
 
+## 主な実装内容
+
 
 
