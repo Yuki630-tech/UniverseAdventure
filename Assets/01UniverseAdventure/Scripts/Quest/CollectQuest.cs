@@ -194,4 +194,13 @@ public class CollectQuest : MonoBehaviour
         yield return new WaitForSeconds(invincibleInterval);
         playerDamage.ChangeInvicibleValue(false); //–³“Gó‘Ô‰ğœ
     }
+
+    [ContextMenu("ƒS[ƒ‹‚µ‚½‚Æ‚İ‚È‚·")]
+    private void Goal()
+    {
+        foreach(var obj in leadToNextStageObjs)
+        {
+            obj.SetActive(true);
+        }
+    }
 }

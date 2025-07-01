@@ -12,13 +12,15 @@ public class CameraChanger : MonoBehaviour
     [Tooltip("camera2→camera1。ブレンドモード"),SerializeField] CinemachineBlendDefinition.Style customBlend21;
     [Tooltip("camera2→camera1。 ブレンドにかける時間"),SerializeField] float blendTime21;
     [Tooltip("プレイヤーが戻ってきて再度通過した際にカメラを戻す機能があるかどうか"),SerializeField] bool hasRecoverEffect;
+
+    [Header("カメラを切り替えられるかどうか"), SerializeField] private bool canChangeCamera = true;
     private void OnTriggerEnter(Collider other)
     {
         
         if (other.gameObject.CompareTag("Player"))
         {
             //現在のカメラの名前がcameraName1の場合cameraName2のカメラに切り替える
-            if (CameraManager.Instance?.GetCurrentCamera() == CameraManager.Instance?.GetCamera(cameraName1))
+            if (CameraManager.Instance?.GetCurrentCamera() == CameraManager.Instance?.GetCamera(cameraName1) && )
             {
                 CameraManager.Instance?.ChangeCamera(cameraName2, customBlend12, blendTime12);
                 
@@ -30,5 +32,10 @@ public class CameraChanger : MonoBehaviour
                 CameraManager.Instance?.ChangeCamera(cameraName1, customBlend21, blendTime21);
             }
         }
+    }
+
+    public void SetIfRecoverEffect(bool setRecover)
+    {
+        hasRecoverEffect = setRecover;
     }
 }

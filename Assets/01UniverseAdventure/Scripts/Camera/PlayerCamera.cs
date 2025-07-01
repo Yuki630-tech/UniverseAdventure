@@ -22,8 +22,6 @@ public class PlayerCamera : MonoBehaviour
     [Tooltip("プレイヤーが上に向かう時のpovの垂直軸の値"), SerializeField] float upPovVerticalValue = 45f;
     [Tooltip("pov値を操作するDOTweenのduration"), SerializeField] float durationOfPovChange = 1f;
 
-    [Header("ワールド空間の上方向とGravityのNormalVecとのDot"), SerializeField] ReactiveProperty<float> dotBetweenUpAndNormalVec = new ReactiveProperty<float>();
-
     /// <summary>
     /// プレイヤーが小惑星上にいるかどうか
     /// </summary>
@@ -54,18 +52,6 @@ public class PlayerCamera : MonoBehaviour
         //カメラマネージャーに自身をPlayerCameraとして登録→カメラマネージャーからInitializeRot()を呼び出せるようにし、
         //横スクロールモードになった時に回転値を初期値に戻せるようにするため。
         CameraManager.Instance?.SetPlayerCamera(this);
-
-        //プレイヤーが小惑星の側面に立った時にPOVを変化させるようにする
-        dotBetweenUpAndNormalVec.Where(dotBetweenUpAndNormalVec => dotBetweenUpAndNormalVec == verticalDot && isOnSmallPlanet)　//ワールド空間の上方向に対してGravityのNormalVecが垂直になっている場合
-                                                                                                                               //→惑星の側面にいる状態
-            .Subscribe(_ => ChangePOVOnSmallPlanet()).AddTo(gameObject);
-        
-        dotBetweenUpAndNormalVec.Where(dotBetweenUpAndNormalVec => dotBetweenUpAndNormalVec >= parallelDot && isOnSmallPlanet).Subscribe(_ =>
-        {
-            playerPos = PlayerPos.up;
-
-        }).AddTo(gameObject);
-        dotBetweenUpAndNormalVec.Where(dotBetweenUpAndNormalVec => dotBetweenUpAndNormalVec <= -parallelDot && isOnSmallPlanet).Subscribe(_ => playerPos = PlayerPos.down).AddTo(gameObject);
         isNotOnNormalPlanet.Where(isNotOnNormalPlanet => isNotOnNormalPlanet).Subscribe(_ =>
         {
             var bodyUp = transform.up;
@@ -116,13 +102,6 @@ public class PlayerCamera : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotateSpeed * Time.deltaTime);
         }
 
-        //小惑星上にいる場合NormalVecとVector3.upとの内積を取得する→POVの垂直軸の値をこの内積に応じて変化させて
-        //惑星の裏側を見えやすくするため
-        else if (isOnSmallPlanet)
-        {
-            dotBetweenUpAndNormalVec.Value = Vector3.Dot(Vector3.up, playerGravity.NormalVec);
-        }
-
     }
     #endregion
 
@@ -149,29 +128,7 @@ public class PlayerCamera : MonoBehaviour
     }
     #endregion
 
-    #region SmallPlanet
-    /// <summary>
-    /// 小惑星にいる間プレイヤーが見えなくなった際にpovの垂直軸の値を反転させる関数
-    /// </summary>
-    void ChangePOVOnSmallPlanet()
-    {
-        //LookAtのモードがPOVモードじゃなければ処理を抜ける
-        pov = playerVirtualCamera.GetCinemachineComponent<CinemachinePOV>();
-        if (pov == null) return;
-        switch (playerPos)
-        {
-            case PlayerPos.up:
-                DOTween.To(GetCurrentPovValue, SetCurrentPovValue, downPovVerticalValue, durationOfPovChange);
-                playerPos = PlayerPos.down;
-                    break;
-            case PlayerPos.down:
-                DOTween.To(GetCurrentPovValue, SetCurrentPovValue, upPovVerticalValue, durationOfPovChange);
-                playerPos = PlayerPos.up;
-                break;
-        }
-
-    }
-    #endregion
+    
 
     #region Dotween
     /// <summary>
