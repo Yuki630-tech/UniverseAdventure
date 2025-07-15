@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
 
     //サブジェクトのセット
     Subject<Unit> onPlayerDieSubject = new Subject<Unit>();
+    Subject<Unit> onTouchCheckPointSubject = new Subject<Unit>();
     Subject<Unit> onPlayerRestartSubject = new Subject<Unit>();
     Subject<Unit> onGameClearOrOverSubject = new Subject<Unit>();
     Subject<Unit> onResetGameSubject = new Subject<Unit>();
@@ -56,6 +57,11 @@ public class GameManager : MonoBehaviour
     /// ゲームがアンポーズした時の処理を登録するためのIObservable
     /// </summary>
     public IObservable<Unit> OnUnPauseGameObservable => onUnPauseGameSubject;
+
+    /// <summary>
+    /// プレイヤーがチェックポイントに触れた時のIObservable
+    /// </summary>
+    public IObservable<Unit> OnTouchCheckPointObservable => onTouchCheckPointSubject;
     
     public static GameManager Instance { get; private set; }
 
@@ -235,5 +241,10 @@ public class GameManager : MonoBehaviour
 
         //ポーズモード解除
         IsPausing = false;
+    }
+
+    public void OnTouchCheckPoint()
+    {
+        onTouchCheckPointSubject.OnNext(Unit.Default);
     }
 }

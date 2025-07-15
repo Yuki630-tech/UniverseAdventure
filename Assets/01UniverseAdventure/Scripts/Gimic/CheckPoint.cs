@@ -23,6 +23,7 @@ public class CheckPoint : MonoBehaviour
             CameraManager.Instance.SetCameraBeforeDie();
 
             CameraManager.Instance.SetMainCamera();
+            GameManager.Instance.OnTouchCheckPoint();
             isEffective = false;
         }
     }
