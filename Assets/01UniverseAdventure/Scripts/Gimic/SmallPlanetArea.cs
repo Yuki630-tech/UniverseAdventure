@@ -38,20 +38,26 @@ public class SmallPlanetArea : MonoBehaviour
 
     private void StartSmallArea()
     {
-        dotBetweenPlayerUpAndWorldUpProperty.Where(dotBetweenPlayerUpAndWorldUp => (dotBetweenPlayerUpAndWorldUp >= parallelDot || IsInRange(dotBetweenPlayerUpAndWorldUp, verticalDot)) && currentDirection == PlayerDirection.Down)
+        dotBetweenPlayerUpAndWorldUpProperty.Where(dotBetweenPlayerUpAndWorldUp => IsInRange(dotBetweenPlayerUpAndWorldUp, verticalDot) && currentDirection == PlayerDirection.Down)
             .Subscribe(_ =>
             {
-                DebugLog.Log("Up!");
-                currentDirection = PlayerDirection.Up;
                 CameraManager.Instance.ChangeCamera(upCameraName, blendStyle, blentTime);
             }).AddTo(disposables);
-        dotBetweenPlayerUpAndWorldUpProperty.Where(dotBetweenPlayerUpAndWorldUp => (dotBetweenPlayerUpAndWorldUp <= -parallelDot || IsInRange(dotBetweenPlayerUpAndWorldUp, verticalDot)) && currentDirection == PlayerDirection.Up)
+        dotBetweenPlayerUpAndWorldUpProperty.Where(dotBetweenPlayerUpAndWorldUp => IsInRange(dotBetweenPlayerUpAndWorldUp, verticalDot) && currentDirection == PlayerDirection.Up)
             .Subscribe(_ =>
             {
-                DebugLog.Log("Down!");
-                currentDirection = PlayerDirection.Down;
                 CameraManager.Instance.ChangeCamera(downCameraName, blendStyle, blentTime);
             }).AddTo(disposables);
+        dotBetweenPlayerUpAndWorldUpProperty.Where(dotBetweenPlayerUpAndWorldUp => dotBetweenPlayerUpAndWorldUp >= parallelDot).Subscribe(_ =>
+        {
+            CameraManager.Instance.ChangeCamera(upCameraName, blendStyle, blentTime);
+            currentDirection = PlayerDirection.Up;
+        }).AddTo(disposables);
+        dotBetweenPlayerUpAndWorldUpProperty.Where(dotBetweenPlayerUpAndWorldUp => dotBetweenPlayerUpAndWorldUp <= -parallelDot).Subscribe(_ =>
+        {
+            CameraManager.Instance.ChangeCamera(downCameraName, blendStyle, blentTime);
+            currentDirection = PlayerDirection.Down;
+        });
     }
 
     private bool IsInRange(float a, float b)
