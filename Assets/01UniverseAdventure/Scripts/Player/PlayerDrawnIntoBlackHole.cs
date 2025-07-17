@@ -116,7 +116,7 @@ public class PlayerDrawnIntoBlackHole : MonoBehaviour
         posZ += drawnSpeed * Time.deltaTime;
     }
 
-    private void OnDrawGizmos()
+    private void OnDrawGizmosSelected()
     {
         if (targetTransform == null) return;
         var radius = startRadius;

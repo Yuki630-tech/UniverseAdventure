@@ -93,7 +93,7 @@ public class CameraManager : MonoBehaviour
         SetBlend(blendStyle, blendTime);
 
         //惑星に沿ってカメラの親オブジェクトを回転させているので横スクロールモードになった時に変な回転状態にならないように回転状態を初期化する
-        if (cameraName == "PlayerVirtualCameraFromSide")
+        if (cameraName == "PlayerVirtualCameraFromSide" || cameraName.Contains("SmallPlanetArea"))
         {
             playerCamera.InitializeRot();
         }

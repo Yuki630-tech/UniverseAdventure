@@ -29,6 +29,7 @@ public class CameraChanger : MonoBehaviour
         
         if (other.gameObject.CompareTag("Player") && canChangeCamera)
         {
+            cameraName1 = CameraManager.Instance.GetCurrentCamera().gameObject.name;
             //Œ»İ‚ÌƒJƒƒ‰‚Ì–¼‘O‚ªcameraName1‚Ìê‡cameraName2‚ÌƒJƒƒ‰‚ÉØ‚è‘Ö‚¦‚é
             if (CameraManager.Instance?.GetCurrentCamera() == CameraManager.Instance?.GetCamera(cameraName1))
             {

@@ -20,6 +20,7 @@ public class SmallPlanetArea : MonoBehaviour
 
     private ReactiveProperty<float> dotBetweenPlayerUpAndWorldUpProperty = new ReactiveProperty<float>();
     [Header("現在のプレイヤーの向き"), SerializeField] private PlayerDirection currentDirection;
+    [Header("有効かどうか"), SerializeField] private bool isInThisPlanetArea;
 
     CompositeDisposable disposables = new CompositeDisposable();
 
@@ -34,30 +35,31 @@ public class SmallPlanetArea : MonoBehaviour
     {
         playerCol.OnTriggerEnterAsObservable().Where(other => other.CompareTag(smallAreaStartTag)).Subscribe(_ => StartSmallArea()).AddTo(this);
         playerCol.OnTriggerEnterAsObservable().Where(other => other.CompareTag(smallAreaEndTag)).Subscribe(_ => EndSmallArea()).AddTo(this);
+        dotBetweenPlayerUpAndWorldUpProperty.Where(dotBetweenPlayerUpAndWorldUp => IsInRange(dotBetweenPlayerUpAndWorldUp, verticalDot) && currentDirection == PlayerDirection.Down)
+           .Where(_ => isInThisPlanetArea).Subscribe(_ =>
+           {
+               CameraManager.Instance.ChangeCamera(upCameraName, blendStyle, blentTime);
+           }).AddTo(this);
+        dotBetweenPlayerUpAndWorldUpProperty.Where(dotBetweenPlayerUpAndWorldUp => IsInRange(dotBetweenPlayerUpAndWorldUp, verticalDot) && currentDirection == PlayerDirection.Up)
+            .Where(_ => isInThisPlanetArea).Subscribe(_ =>
+            {
+                CameraManager.Instance.ChangeCamera(downCameraName, blendStyle, blentTime);
+            }).AddTo(this);
+        dotBetweenPlayerUpAndWorldUpProperty.Where(dotBetweenPlayerUpAndWorldUp => dotBetweenPlayerUpAndWorldUp >= parallelDot).Where(_ => isInThisPlanetArea).Subscribe(_ =>
+        {
+            CameraManager.Instance.ChangeCamera(upCameraName, blendStyle, blentTime);
+            currentDirection = PlayerDirection.Up;
+        }).AddTo(this);
+        dotBetweenPlayerUpAndWorldUpProperty.Where(dotBetweenPlayerUpAndWorldUp => dotBetweenPlayerUpAndWorldUp <= -parallelDot).Where(_ => isInThisPlanetArea).Subscribe(_ =>
+        {
+            CameraManager.Instance.ChangeCamera(downCameraName, blendStyle, blentTime);
+            currentDirection = PlayerDirection.Down;
+        }).AddTo(this);
     }
 
     private void StartSmallArea()
     {
-        dotBetweenPlayerUpAndWorldUpProperty.Where(dotBetweenPlayerUpAndWorldUp => IsInRange(dotBetweenPlayerUpAndWorldUp, verticalDot) && currentDirection == PlayerDirection.Down)
-            .Subscribe(_ =>
-            {
-                CameraManager.Instance.ChangeCamera(upCameraName, blendStyle, blentTime);
-            }).AddTo(disposables);
-        dotBetweenPlayerUpAndWorldUpProperty.Where(dotBetweenPlayerUpAndWorldUp => IsInRange(dotBetweenPlayerUpAndWorldUp, verticalDot) && currentDirection == PlayerDirection.Up)
-            .Subscribe(_ =>
-            {
-                CameraManager.Instance.ChangeCamera(downCameraName, blendStyle, blentTime);
-            }).AddTo(disposables);
-        dotBetweenPlayerUpAndWorldUpProperty.Where(dotBetweenPlayerUpAndWorldUp => dotBetweenPlayerUpAndWorldUp >= parallelDot).Subscribe(_ =>
-        {
-            CameraManager.Instance.ChangeCamera(upCameraName, blendStyle, blentTime);
-            currentDirection = PlayerDirection.Up;
-        }).AddTo(disposables);
-        dotBetweenPlayerUpAndWorldUpProperty.Where(dotBetweenPlayerUpAndWorldUp => dotBetweenPlayerUpAndWorldUp <= -parallelDot).Subscribe(_ =>
-        {
-            CameraManager.Instance.ChangeCamera(downCameraName, blendStyle, blentTime);
-            currentDirection = PlayerDirection.Down;
-        });
+        isInThisPlanetArea = true;
     }
 
     private bool IsInRange(float a, float b)
@@ -67,7 +69,7 @@ public class SmallPlanetArea : MonoBehaviour
 
     private void EndSmallArea()
     {
-        disposables.Dispose();
+        isInThisPlanetArea = false;
     }
 
     // Start is called before the first frame update

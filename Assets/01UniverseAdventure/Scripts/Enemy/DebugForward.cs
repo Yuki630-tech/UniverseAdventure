@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UniRx;
+#if false
 #if UNITY_EDITOR
 [ExecuteInEditMode]
 /// <summary>
@@ -78,7 +79,7 @@ public class DebugForward : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
+    private void OnDrawGizmosSelected()
     {
         //再生モードか、Planetオブジェクトがない場合はギズモを描かない
         if (Application.isPlaying || planet == null) return;
@@ -159,4 +160,5 @@ public class DebugForward : MonoBehaviour
 
 
 }
+#endif
 #endif
