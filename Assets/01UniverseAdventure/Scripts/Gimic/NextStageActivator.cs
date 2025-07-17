@@ -8,7 +8,7 @@ public class NextStageActivator : MonoBehaviour
 
     private void Awake()
     {
-        nextStage.SetActive(false);
+        //nextStage.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
