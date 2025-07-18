@@ -39,12 +39,6 @@ public class NPCInTimeline : MonoBehaviour
             case NPCState.Move:
                 UpdateMove();
 
-                if(Vector3.Distance(transform.position, destinationTrans.position) <= 0.1f)
-                {
-                    transform.position = destinationTrans.position;
-                    ChangeToIdleState();
-                }
-
                 break;
 
         }
@@ -54,6 +48,7 @@ public class NPCInTimeline : MonoBehaviour
     {
         currentState = NPCState.Idle;
         animator.SetBool(AnimationParametaName.IsMove, false);
+        rb.velocity = Vector3.zero;
     }
 
     public async void ChangeToMoveState()
@@ -81,6 +76,8 @@ public class NPCInTimeline : MonoBehaviour
         Vector3 direction = (destinationTrans.position - transform.position).normalized;
         Vector3 right = Vector3.Cross(gravity.NormalVec, direction).normalized;
         Vector3 forward = Vector3.Cross(right, gravity.NormalVec).normalized;
+        var lookRot = Quaternion.LookRotation(forward);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, lookRot, rotateSpeed * Time.deltaTime);
         rb.MovePosition(rb.position + forward * moveSpeed * Time.deltaTime);
     }
 
@@ -88,6 +85,14 @@ public class NPCInTimeline : MonoBehaviour
     {
         destinationTrans = setDestinationTrans;
         moveSpeed = setSpeed;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Destination"))
+        {
+            ChangeToIdleState();
+        }
     }
 
     private void Reset()

@@ -27,6 +27,7 @@ TagManager:
   - Stage13Start
   - PlayerAttack
   - Stage2Quit
+  - Destination
   layers:
   - Default
   - TransparentFX

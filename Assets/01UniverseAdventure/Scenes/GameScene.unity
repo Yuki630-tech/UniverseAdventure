@@ -12836,9 +12836,10 @@ GameObject:
   - component: {fileID: 936206629}
   - component: {fileID: 936206631}
   - component: {fileID: 936206630}
+  - component: {fileID: 936206632}
   m_Layer: 0
   m_Name: Destination1
-  m_TagString: Untagged
+  m_TagString: Destination
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12908,6 +12909,27 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 936206628}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &936206632
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 936206628}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &941903841
 GameObject:
   m_ObjectHideFlags: 0
@@ -32591,7 +32613,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: ac94870c87c0e1849a4bbecb10ab0ea2, type: 3}
+      objectReference: {fileID: 8300000, guid: 57033d36294353e42be5085d4c019d28, type: 3}
     - target: {fileID: 8876644143369672497, guid: 36d8de493c94b134b98c0c81f2b06ec4,
         type: 3}
       propertyPath: m_Name
@@ -37209,8 +37231,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 29.166801, y: 8.712, z: -563.3517}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.7, y: 1.7, z: 1.7}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2293744929811737979}
   - {fileID: 4103581685694263546}
@@ -37234,7 +37256,7 @@ MonoBehaviour:
   movable: {fileID: 0}
   isCharacter: 0
   gravity: -20
-  rotateSpeedTowardGravityUp: 120
+  rotateSpeedTowardGravityUp: 500
   disableTime: 0.5
   normalVec: {x: 0, y: 0, z: 0}
   isInGravityChangeArea: 0
