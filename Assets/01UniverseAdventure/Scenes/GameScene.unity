@@ -5370,12 +5370,42 @@ MonoBehaviour:
   m_Events:
     m_Signals:
     - {fileID: 11400000, guid: 1c8ca49587d01df46a9537319eeed02a, type: 2}
+    - {fileID: 11400000, guid: 4da948d7fe0be7c46b0b0b0a1823edc8, type: 2}
+    - {fileID: 11400000, guid: a559408eb887b654dac145ba35275e2d, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 9181064306910657937}
           m_TargetAssemblyTypeName: NPC, Assembly-CSharp
           m_MethodName: ChangeToMoveState
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 507893596461213853}
+          m_TargetAssemblyTypeName: PlayerMover, Assembly-CSharp
+          m_MethodName: GoToImmovable
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 507893596461213853}
+          m_TargetAssemblyTypeName: PlayerMover, Assembly-CSharp
+          m_MethodName: GoToMovable
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -29894,6 +29924,18 @@ CapsuleCollider:
     type: 3}
   m_PrefabInstance: {fileID: 2769865107132633779}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &507893596461213853 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2309242007663451736, guid: 9b4387fb2b4066640b711bdbe887254a,
+    type: 3}
+  m_PrefabInstance: {fileID: 2769865107132633779}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1150885510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d16393bfe815bd2489f74454268575f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &557692867932847423
 Transform:
   m_ObjectHideFlags: 0
@@ -32613,7 +32655,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: 57033d36294353e42be5085d4c019d28, type: 3}
+      objectReference: {fileID: 8300000, guid: ac94870c87c0e1849a4bbecb10ab0ea2, type: 3}
     - target: {fileID: 8876644143369672497, guid: 36d8de493c94b134b98c0c81f2b06ec4,
         type: 3}
       propertyPath: m_Name
