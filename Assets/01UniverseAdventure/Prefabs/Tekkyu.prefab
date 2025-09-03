@@ -121,6 +121,8 @@ MonoBehaviour:
   data:
     damage: 1
     knockBack: {x: 0, y: 0, z: -1}
+  detecterType: 0
+  receivers: []
 --- !u!1 &8482939713234813533
 GameObject:
   m_ObjectHideFlags: 0
@@ -251,11 +253,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 3613281638431181097}
   planetObj: {fileID: 0}
+  planet: {fileID: 0}
   movable: {fileID: 0}
   isCharacter: 0
   gravity: -20
   rotateSpeedTowardGravityUp: 120
   disableTime: 0.5
+  normalVec: {x: 0, y: 0, z: 0}
+  isInGravityChangeArea: 0
+  gravityChanger: {fileID: 0}
+  up: {x: 0, y: 0, z: 0}
+  currentGravityTrap: {fileID: 0}
+  moveDistanceWhenGravityInverse: 0.5
 --- !u!135 &5277363908964312039
 SphereCollider:
   m_ObjectHideFlags: 0

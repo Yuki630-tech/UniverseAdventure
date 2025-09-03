@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class Planet : MonoBehaviour
 {
-    [Tooltip("è¨òfêØÇ©Ç«Ç§Ç©"), SerializeField] bool isSmall;
+    [Tooltip("òfêØÇÃÉ^ÉCÉv"), SerializeField] private PlanetType planetType;
 
-    /// <summary>
-    /// è¨òfêØÇ©Ç«Ç§Ç©
-    /// </summary>
-    public bool IsSmall { get => isSmall; }
+    public PlanetType PlanetTypeParam { get => planetType; }
+
+    public enum PlanetType
+    {
+        Sphere,
+        Box,
+        SmallBox,
+    }
 }

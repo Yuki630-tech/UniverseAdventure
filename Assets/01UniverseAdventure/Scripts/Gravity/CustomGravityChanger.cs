@@ -7,6 +7,10 @@ public class CustomGravityChanger : MonoBehaviour
 {
     [Tooltip("触れたときにプレイヤーを動かないようにするかどうか"), SerializeField] bool hasImmovableEffect;
     [Tooltip("プレイヤーが接地するまで次の重力切り替えが起こらないようにするかどうか"), SerializeField] bool hasWaitUntilGroundedEffect;
+    [Tooltip("PlayerCamera(反転した時にカメラも回すかどうかを決定するため"), SerializeField] private PlayerCamera playerCamera;
+    [Tooltip("PlayerCameraを重力の向きに合わせて回転させるかどうか"), SerializeField] private bool isEnableToRotateWithGravity;
+    [Tooltip("ワールド空間上方向にカメラを戻すかどうか"), SerializeField] private bool isRotateToUp;
+    [Tooltip("通過後戻ってきたときにも重力を切り替えるかどうか"), SerializeField] private bool isEnableAfterPlayerTouch;
 
     /// <summary>
     /// 機能が有効かどうか
@@ -22,12 +26,13 @@ public class CustomGravityChanger : MonoBehaviour
     private async void OnTriggerEnter(Collider other)
     {
         var gravity = other.GetComponent<Gravity>();
-        if(gravity != null && isEffective)
+        if(gravity != null && isEffective && other.CompareTag("Player"))
         {
-            
+            playerCamera.SetIfEnableToFlip(isEnableToRotateWithGravity);
+            playerCamera.SetIfEnableToRotate(isRotateToUp);
             //自身の上方向を触れた相手の重力の上方向に設定する。
             await gravity.SetGravity(gameObject, hasImmovableEffect, hasWaitUntilGroundedEffect, transform.up);
-            isEffective = false;
+            if(!isEnableAfterPlayerTouch) isEffective = false;
         }
     }
 }

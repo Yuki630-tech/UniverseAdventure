@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
     Subject<Unit> onResetGameSubject = new Subject<Unit>();
     Subject<Unit> onPauseGameSubject = new Subject<Unit>();
     Subject<Unit> onUnPauseGameSubject = new Subject<Unit>();
-
+    Subject<Unit> onBlackHoleSubject = new Subject<Unit>();
 
     /// <summary>
     /// プレイヤーが死んだときの処理を登録するためのIObservable
@@ -62,6 +62,11 @@ public class GameManager : MonoBehaviour
     /// プレイヤーがチェックポイントに触れた時のIObservable
     /// </summary>
     public IObservable<Unit> OnTouchCheckPointObservable => onTouchCheckPointSubject;
+
+    /// <summary>
+    /// ブラックホールに吸い込まれたときのIObservable
+    /// </summary>
+    public IObservable<Unit> OnBlackHoleObservable => onBlackHoleSubject;
     
     public static GameManager Instance { get; private set; }
 
@@ -246,5 +251,10 @@ public class GameManager : MonoBehaviour
     public void OnTouchCheckPoint()
     {
         onTouchCheckPointSubject.OnNext(Unit.Default);
+    }
+
+    public void OnBlackHole()
+    {
+        onBlackHoleSubject.OnNext(Unit.Default);
     }
 }

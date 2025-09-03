@@ -65,6 +65,7 @@ public class PlayerDamage : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(-lookVec);
 
         }
+        
         rb.velocity = knockBack * knockBackPower;
 
         //‚·‚×‚è‚â‚·‚¢‚æ‚¤‚É‚·‚é
@@ -116,6 +117,19 @@ public class PlayerDamage : MonoBehaviour
     {
         isInvincible = setInvincible;
         isEnableToSwitchInvicibleMode = !setInvincible;
+    }
+
+    /// <summary>
+    /// timeline‚Ö‚ÌƒCƒxƒ“ƒg“o˜^—p
+    /// </summary>
+    public void GoToInvicible()
+    {
+        ChangeInvicibleValue(true);
+    }
+
+    public void GoToNormal()
+    {
+        ChangeInvicibleValue(false);
     }
 
     /// <summary>

@@ -255,6 +255,7 @@ public class Gravity : MonoBehaviour
     {
         try
         {
+            DebugLog.Log("d—Í‚ª•Ï‰»‚µ‚Ü‚µ‚½");
             //G‚ê‚½‚Î‚©‚è‚ÌGravityChangeTrap‚ÉÄ‚ÑG‚ê‚½‚Æ‚«‚É‚Í‹@”\‚µ‚È‚¢‚æ‚¤‚É‚·‚é
             if (setObject == currentGravityTrap) return;
             //GravityChangeTrap“o˜^

@@ -13,6 +13,7 @@ public class GravityChanger : MonoBehaviour
     [Tooltip("Œx‚ğ’Ê’m‚·‚éŠÔŠu"), SerializeField] float warningInterval = 3.5f;
     [Tooltip("ƒ|[ƒY‚ğ‰ğœ‚µ‚Ä‚©‚çŒx‚ğ’Ê’m‚·‚é‚Ü‚Å‚ÌŠÔŠu"), SerializeField] float warningIntervalFromUnPause = 1.3f;
     [Tooltip("Œx‰¹‚ğ–Â‚ç‚·ŠÔŠu"), SerializeField] float warningSEPlayInterval = 0.5f;
+    [Tooltip("PlayerCamera¨d—Í‚ÌŒü‚«‚É‰ñ“]‚µ‚È‚¢‚æ‚¤‚Éİ’è‚·‚é‚½‚ß"), SerializeField] private PlayerCamera playerCamera;
     int warningCount = 3; //‚P“x‚ÌŒx‚Å‰¹‚ğ–Â‚ç‚·‰ñ”
     IDisposable playerDieDisposable;
     IDisposable gameClearDisposable;

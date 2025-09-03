@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7781505810725580995}
   - component: {fileID: 7787610050000470504}
   - component: {fileID: 8630311208224868802}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SpherePlanet
   m_TagString: Planet
   m_Icon: {fileID: 0}
@@ -118,4 +118,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4919c91edb21b4fbd89bbe90b1fb84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isSmall: 0
+  planetType: 0

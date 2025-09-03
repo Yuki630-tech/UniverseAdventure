@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 public class SmallPlanetArea : MonoBehaviour
 {
     [Tooltip("カメラの切り替える方法"), SerializeField] private CinemachineBlendDefinition.Style blendStyle;
-    [Tooltip("切り替えるのにかける時間"), SerializeField] private float blentTime;
+    [Tooltip("切り替えるのにかける時間"), SerializeField] private float blendTime;
     [Tooltip("プレイヤーの当たり判定"), SerializeField] private Collider playerCol;
     [Tooltip("スモールステージのスタート地点のタグ名"), SerializeField] private string smallAreaStartTag;
     [Tooltip("スモールステージのスタート地点のタグ名"), SerializeField] private string smallAreaEndTag;
@@ -19,6 +19,7 @@ public class SmallPlanetArea : MonoBehaviour
 
 
     private ReactiveProperty<float> dotBetweenPlayerUpAndWorldUpProperty = new ReactiveProperty<float>();
+    private ReactiveProperty<float> dotBetweenPlayerForwardAndWorldUpProperty = new ReactiveProperty<float>();
     [Header("現在のプレイヤーの向き"), SerializeField] private PlayerDirection currentDirection;
     [Header("有効かどうか"), SerializeField] private bool isInThisPlanetArea;
 
@@ -38,23 +39,40 @@ public class SmallPlanetArea : MonoBehaviour
         dotBetweenPlayerUpAndWorldUpProperty.Where(dotBetweenPlayerUpAndWorldUp => IsInRange(dotBetweenPlayerUpAndWorldUp, verticalDot) && currentDirection == PlayerDirection.Down)
            .Where(_ => isInThisPlanetArea).Subscribe(_ =>
            {
-               CameraManager.Instance.ChangeCamera(upCameraName, blendStyle, blentTime);
+               CameraManager.Instance.ChangeCamera(upCameraName, blendStyle, blendTime);
            }).AddTo(this);
         dotBetweenPlayerUpAndWorldUpProperty.Where(dotBetweenPlayerUpAndWorldUp => IsInRange(dotBetweenPlayerUpAndWorldUp, verticalDot) && currentDirection == PlayerDirection.Up)
             .Where(_ => isInThisPlanetArea).Subscribe(_ =>
             {
-                CameraManager.Instance.ChangeCamera(downCameraName, blendStyle, blentTime);
+                CameraManager.Instance.ChangeCamera(downCameraName, blendStyle, blendTime);
             }).AddTo(this);
         dotBetweenPlayerUpAndWorldUpProperty.Where(dotBetweenPlayerUpAndWorldUp => dotBetweenPlayerUpAndWorldUp >= parallelDot).Where(_ => isInThisPlanetArea).Subscribe(_ =>
         {
-            CameraManager.Instance.ChangeCamera(upCameraName, blendStyle, blentTime);
+            CameraManager.Instance.ChangeCamera(upCameraName, blendStyle, blendTime);
             currentDirection = PlayerDirection.Up;
         }).AddTo(this);
         dotBetweenPlayerUpAndWorldUpProperty.Where(dotBetweenPlayerUpAndWorldUp => dotBetweenPlayerUpAndWorldUp <= -parallelDot).Where(_ => isInThisPlanetArea).Subscribe(_ =>
         {
-            CameraManager.Instance.ChangeCamera(downCameraName, blendStyle, blentTime);
+            CameraManager.Instance.ChangeCamera(downCameraName, blendStyle, blendTime);
             currentDirection = PlayerDirection.Down;
         }).AddTo(this);
+
+        dotBetweenPlayerForwardAndWorldUpProperty.Where(dotBetweenPlayerForwardAndWorldUp => dotBetweenPlayerForwardAndWorldUp >= parallelDot)
+            .Where(_ => isInThisPlanetArea)
+            .Subscribe(_ =>
+            {
+                CameraManager.Instance.ChangeCamera(upCameraName, blendStyle, blendTime);
+            })
+            .AddTo(this); 
+        dotBetweenPlayerForwardAndWorldUpProperty.Where(dotBetweenPlayerForwardAndWorldUpProperty => dotBetweenPlayerForwardAndWorldUpProperty <=-parallelDot)
+            .Where(_ => isInThisPlanetArea)
+            .Subscribe(_ =>
+            {
+                CameraManager.Instance.ChangeCamera(downCameraName, blendStyle, blendTime);
+            })
+            .AddTo(this);
+
+        
     }
 
     private void StartSmallArea()
@@ -82,6 +100,7 @@ public class SmallPlanetArea : MonoBehaviour
     void Update()
     {
         dotBetweenPlayerUpAndWorldUpProperty.Value = Vector3.Dot(playerCol.transform.up, Vector3.up);
+        dotBetweenPlayerForwardAndWorldUpProperty.Value = Vector3.Dot(playerCol.transform.forward, Vector3.up);
         //DebugLog.Log($"垂直？: {IsInRange(dotBetweenPlayerUpAndWorldUpProperty.Value, verticalDot)}");
     }
 }

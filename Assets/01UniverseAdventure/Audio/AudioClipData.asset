@@ -27,6 +27,8 @@ MonoBehaviour:
     AudioClip: {fileID: 0}
   - Name: 7
     AudioClip: {fileID: 8300000, guid: ac94870c87c0e1849a4bbecb10ab0ea2, type: 3}
+  - Name: 8
+    AudioClip: {fileID: 8300000, guid: 2c98468a46bf2574a8ab9122b92ca887, type: 3}
   seDatas:
   - Name: 1
     AudioClip: {fileID: 8300000, guid: 4c1f340bfe2adb24d9d64b39d51753ca, type: 3}
@@ -36,3 +38,5 @@ MonoBehaviour:
     AudioClip: {fileID: 0}
   - Name: 3
     AudioClip: {fileID: 8300000, guid: f1ce43604e15105439132719879fdec9, type: 3}
+  - Name: 4
+    AudioClip: {fileID: 8300000, guid: 5c53b818925a28a449837a2a888edfdd, type: 3}

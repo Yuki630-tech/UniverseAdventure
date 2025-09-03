@@ -12,6 +12,7 @@ public class InputMapName : ScriptableObject
     [SerializeField] string hipDropInputMapName = "HipDrop";
     [SerializeField] string pauseInputMapName = "Pause";
     [SerializeField] string decisionInputMapName = "Decision";
+    [SerializeField] string goToNextSerifInputMapName = "GoToNextSerif";
 
     public string DirectionInputMap { get => directionInputMap;}
     public string AttackInputMap { get => attackInputMap; }
@@ -20,4 +21,5 @@ public class InputMapName : ScriptableObject
     public string HipDropInputMapName { get => hipDropInputMapName;}
     public string PauseInputMapName { get => pauseInputMapName; }
     public string DecisionInputMapName { get => decisionInputMapName;}
+    public string GoToNextSerifInputMapName { get => goToNextSerifInputMapName; }
 }

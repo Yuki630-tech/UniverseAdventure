@@ -4,7 +4,7 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 
-public class TekkyuEnemy : MonoBehaviour
+public class TekkyuEnemy : EnemyBase
 {
     [Tooltip("“G‚ª”­Ë‚·‚é“S‹…‚ÌƒvƒŒƒnƒu"),SerializeField] GameObject tekkyuPrefab;
     [Tooltip("“S‹…‚ª”­Ë‚³‚ê‚éˆÊ’u"),SerializeField] Transform spawner;
@@ -36,7 +36,7 @@ public class TekkyuEnemy : MonoBehaviour
             var tekkyuGravity = tekkyuObject.GetComponent<Gravity>();
             //“S‹…‚ÌGravity‚ÌNormalVec‚Ü‚½‚ÍPlanet‚É©g‚Ì‚à‚Ì‚ğ“o˜^‚µAd—Í‚Ì•ûŒü‚Æ‰ˆ‚í‚¹‚é‘ÎÛ‚ÌPlanet‚ğİ’è‚·‚é
             tekkyuGravity?.SetGravity(gravity);
-
+            yield return null;
             //“S‹…‚ğ‘O•ûŒü‚É”ò‚Î‚·
             var tekkyuRb = tekkyuObject.GetComponent<Rigidbody>();
             tekkyuRb.AddForce(transform.forward * power, ForceMode.Impulse);
@@ -45,5 +45,8 @@ public class TekkyuEnemy : MonoBehaviour
         }
     }
 
-
+    protected override void Die()
+    {
+        
+    }
 }

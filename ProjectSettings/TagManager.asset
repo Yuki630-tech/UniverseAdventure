@@ -35,8 +35,8 @@ TagManager:
   - GravityInverseTrap
   - Water
   - UI
-  - Ground
-  - Planet
+  - MetalGround
+  - MetalPlanet
   - Player
   - LazerSpawner
   - TekkyuWall
@@ -44,10 +44,10 @@ TagManager:
   - Enemy
   - StarChip
   - SmallPlanet
-  - 
-  - 
-  - 
-  - 
+  - GrassGround
+  - SoilGround
+  - WoodGround
+  - ConcreatGround
   - 
   - 
   - 

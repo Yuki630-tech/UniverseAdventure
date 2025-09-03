@@ -82,7 +82,7 @@ public class DebugForward : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         //再生モードか、Planetオブジェクトがない場合はギズモを描かない
-        if (Application.isPlaying || planet == null) return;
+        if (Application.isPlaying) return;
         //敵を移動、回転させた時にギズモが不自然にならないように回転前に存在したギズモの頂点を削除する
         if (transform.rotation != lastRotation)
         {

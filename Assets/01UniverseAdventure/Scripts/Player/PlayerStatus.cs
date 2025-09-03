@@ -88,7 +88,11 @@ public class PlayerStatus : MonoBehaviour
 
     public void Heel(int amount = 1)
     {
-
+        if(playerStatusData != null)
+        {
+            playerStatusData.Hp += amount;
+            hp.Value = playerStatusData.Hp;
+        }
     }
 
 

@@ -14,6 +14,7 @@ public class InputManager : MonoBehaviour
     ReactiveProperty<Vector3> _directionInput = new ReactiveProperty<Vector3>();
     ReactiveProperty<bool> _isMenuOpenClose = new ReactiveProperty<bool>();
     ReactiveProperty<bool> _isDecided = new ReactiveProperty<bool>();
+    ReactiveProperty<bool> _isGoToNextSerif = new ReactiveProperty<bool>();
 
     
     //------------------プロパティ----------------------
@@ -23,6 +24,12 @@ public class InputManager : MonoBehaviour
     public IReadOnlyReactiveProperty<bool> IsMenuOpenClose => _isMenuOpenClose;
 
     public IReadOnlyReactiveProperty<bool> IsDecided => _isDecided;
+    public IReadOnlyReactiveProperty<bool> IsGoToNextSerif => _isGoToNextSerif;
+
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -38,6 +45,6 @@ public class InputManager : MonoBehaviour
         _directionInput.Value = playerInput.currentActionMap[inputMapName.DirectionInputMap].ReadValue<Vector2>();
         _isMenuOpenClose.Value = playerInput.currentActionMap[inputMapName.PauseInputMapName].WasPressedThisFrame();
         _isDecided.Value = playerInput.currentActionMap[inputMapName.DecisionInputMapName].WasPressedThisFrame();
-        
+        _isGoToNextSerif.Value = playerInput.currentActionMap[inputMapName.GoToNextSerifInputMapName].WasPressedThisFrame();
     }
 }

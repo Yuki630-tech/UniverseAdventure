@@ -9,6 +9,6 @@ public class PlayerAttack : MonoBehaviour
     [Tooltip("ƒWƒƒƒ“ƒv—Í"), SerializeField] float jumpPower = 2f;
     public void JumpWhenAttack()
     {
-        rb.AddForce(gravity.NormalVec * jumpPower, ForceMode.Impulse);
+        rb.AddForce(transform.up * jumpPower, ForceMode.Impulse);
     }
 }

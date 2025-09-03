@@ -404,3 +404,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spline: {fileID: 3216331543579244378}
+  collectQuest: {fileID: 0}

@@ -21,7 +21,8 @@ public class PlayerCamera : MonoBehaviour
     [Tooltip("プレイヤーが下に向かう時のpovの垂直軸の値"), SerializeField] float downPovVerticalValue = -45f;
     [Tooltip("プレイヤーが上に向かう時のpovの垂直軸の値"), SerializeField] float upPovVerticalValue = 45f;
     [Tooltip("pov値を操作するDOTweenのduration"), SerializeField] float durationOfPovChange = 1f;
-
+    private bool isRotateToUp;
+   
     /// <summary>
     /// プレイヤーが小惑星上にいるかどうか
     /// </summary>
@@ -42,9 +43,11 @@ public class PlayerCamera : MonoBehaviour
     /// 初期の回転値
     /// </summary>
     Quaternion startRot;
+    [Header("プレイヤーと一緒に回ってくれる?"), SerializeField] private bool isEnableToFilp;
 
     private void Awake()
     {
+        isRotateToUp = true;
         playerPos = PlayerPos.up;
         //初期回転を取得
         startRot = transform.rotation;
@@ -57,14 +60,14 @@ public class PlayerCamera : MonoBehaviour
             var bodyUp = transform.up;
             var up = Vector3.up;
             transform.rotation = Quaternion.FromToRotation(bodyUp, up) * transform.rotation;
-            
+
         });
 
     }
     private void Update()
     {
-        isOnSmallPlanet = playerGravity.Planet != null && playerGravity.Planet.IsSmall;
-        isNotOnNormalPlanet.Value = (playerGravity.PlanetObj == null || isOnSmallPlanet) && !isFlying;
+        isOnSmallPlanet = playerGravity.Planet != null && playerGravity.Planet.PlanetTypeParam == Planet.PlanetType.SmallBox;
+        isNotOnNormalPlanet.Value = (playerGravity.PlanetObj == null || isOnSmallPlanet) && !isFlying && !isEnableToFilp && isRotateToUp;
         //スターリングに乗っているときにはプレイヤーの上方向、惑星上にいるときはgravity.NormalVec方向にカメラを回転させる
         if (isFlying)
         {
@@ -76,6 +79,16 @@ public class PlayerCamera : MonoBehaviour
             SetCameraRot();
         }
 
+    }
+
+    public void SetIfEnableToFlip(bool setEnable)
+    {
+        isEnableToFilp = setEnable;
+    }
+
+    public void SetIfEnableToRotate(bool setEnable)
+    {
+        isRotateToUp = setEnable;
     }
     /// <summary>
     /// 回転値を初期値に戻す関数
@@ -94,7 +107,7 @@ public class PlayerCamera : MonoBehaviour
     {
         var bodyUp = transform.up;
         //惑星上にいる場合惑星のNormalVecにカメラの上方向が向くようにする
-        if (playerGravity.PlanetObj != null && !isOnSmallPlanet)
+        if ((playerGravity.PlanetObj != null && !isOnSmallPlanet) || (playerGravity.PlanetObj == null && isEnableToFilp))
         {
             var playerUp = playerGravity.NormalVec;
 
@@ -127,8 +140,6 @@ public class PlayerCamera : MonoBehaviour
         isFlying = setFlying;
     }
     #endregion
-
-    
 
     #region Dotween
     /// <summary>

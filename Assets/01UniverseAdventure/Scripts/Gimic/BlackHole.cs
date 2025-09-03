@@ -36,6 +36,7 @@ public class BlackHole : MonoBehaviour
         {
             //ブラックホールに吸い込まれる挙動を開始する
             player.ChangeToBlackHoleState(transform);
+            GameManager.Instance.OnBlackHole();
             
         }
     }

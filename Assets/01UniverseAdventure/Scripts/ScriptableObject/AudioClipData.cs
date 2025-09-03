@@ -17,7 +17,8 @@ public class AudioClipData : ScriptableObject
         ConversationBGM,
         DieBGM,
         GameOverBGM,
-        TitleBGM
+        TitleBGM,
+        Village
         
     }
 
@@ -26,7 +27,8 @@ public class AudioClipData : ScriptableObject
         None,
         GetItem,
         AppearStarring,
-        Die
+        Die,
+        StepOn
     }
 
     [Serializable]

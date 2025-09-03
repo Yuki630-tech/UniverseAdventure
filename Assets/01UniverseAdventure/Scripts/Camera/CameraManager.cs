@@ -11,9 +11,12 @@ public class CameraManager : MonoBehaviour
     [Tooltip("プレイヤーのカメラ"),SerializeField] PlayerCamera playerCamera;
 
     public static CameraManager Instance { get; private set; }
+    public string CameraNameBeforeDialogue { get => cameraNameBeforeDialogue; }
+
     [Tooltip("シーン上にあるメインカメラ"), SerializeField] Camera mainCamera;
     [Tooltip("メインカメラにセットされているCinemachineBrain"), SerializeField] CinemachineBrain mainCameraBrain;
     [Header("チェックポイントに触れたときに有効になっているカメラの名前"), SerializeField] string cameraNameBeforeDie;
+    [Header("会話イベントが始まる前のカメラの名前"), SerializeField] string cameraNameBeforeDialogue;
 
     private void Awake()
     {
@@ -48,6 +51,10 @@ public class CameraManager : MonoBehaviour
             }
             ChangeCamera(cameraNameBeforeDie, CinemachineBlendDefinition.Style.Cut, 0f);
         });
+
+        DialogueManager.Instance.OnDialogueStartObservable.Subscribe(_ => cameraNameBeforeDialogue = GetCurrentCamera().name);
+        DialogueManager.Instance.OnDialogueStartObservable.Subscribe(_ => DebugLog.Log(GetCurrentCamera().name));
+        DialogueManager.Instance.OnDialogueEndObservable.Subscribe(_ => ChangeCamera(cameraNameBeforeDialogue, CinemachineBlendDefinition.Style.Cut, 0f));
         
     }
 
@@ -83,6 +90,7 @@ public class CameraManager : MonoBehaviour
 
     public void ChangeCamera(string cameraName, CinemachineBlendDefinition.Style blendStyle = CinemachineBlendDefinition.Style.EaseInOut, float blendTime = 2.0f)
     {
+        DebugLog.Log($"カメラが切り替わったよ : {cameraName}");
         //現在有効になっているカメラと切り替えるカメラをシーン上から取得
         var camera1 = cinemachineVirtualCameras.FirstOrDefault(camera => camera.Priority == 10);
         var camera2 = cinemachineVirtualCameras.FirstOrDefault(camera => camera.Name == cameraName);
@@ -97,6 +105,17 @@ public class CameraManager : MonoBehaviour
         {
             playerCamera.InitializeRot();
         }
+
+    }
+
+    public void ChangeCamera(CinemachineVirtualCamera setCamera, CinemachineBlendDefinition.Style blendStyle = CinemachineBlendDefinition.Style.Cut, float blendTime = 0f)
+    {
+        var camera1 = cinemachineVirtualCameras.FirstOrDefault(camera => camera.Priority == 10);
+        var camera2 = setCamera;
+
+        camera1.Priority = -1;
+        camera2.Priority = 10;
+        SetBlend(blendStyle, blendTime);
 
     }
 

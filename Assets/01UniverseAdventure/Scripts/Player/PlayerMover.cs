@@ -12,11 +12,14 @@ public class PlayerMover : Movable
 {
     [Tooltip("入力を制御するマネージャー"), SerializeField] InputManager inputManager;
     [Tooltip("足音を鳴らすオーディオソース"), SerializeField] AudioSource audioSource;
+    [Header("どのレイヤーでどの足音を流すか"), SerializeField] private List<FootSeSet> footSeSets = new List<FootSeSet>();
     [Tooltip("足音のオーディオクリップ"), SerializeField] AudioClip footAudioClip;
     [Tooltip("ジャンプ時のオーディオクリップ"), SerializeField] AudioClip jumpAudioclip;
+    [Tooltip("踏みつけ時のオーディオクリップ"), SerializeField] AudioClip stepOnAudioClip;
     [Tooltip("移動速度"), SerializeField] float moveSpeed;
     [Tooltip("接地判定を行うコンポーネント"), SerializeField] GroundChecker groundChecker;
     [Tooltip("ジャンプ力"), SerializeField] float jumpPower;
+    [Tooltip("攻撃時のジャンプ力"), SerializeField] float attackJumpPower;
     [Tooltip("プレイヤーのアニメーターコンポーネント"), SerializeField] Animator animator;
 
     [Tooltip("移動手段として用いる物理挙動"), SerializeField] Rigidbody rb;
@@ -35,20 +38,34 @@ public class PlayerMover : Movable
     bool isUpSideDown;
     [Tooltip("平行状態とみなす内積の最大値"), SerializeField] float parallelThreshould = 0.8f;
     [Tooltip("上下さかさまであるとみなす内積の最大値"), SerializeField] float upsideDownThreshould = 0.4f;
+    ReactiveProperty<Vector3> gravityNormalProperty = new ReactiveProperty<Vector3>();
     bool planetIsSmallBox;
     bool isOnlyMoveToSide;
-    bool isOnSideOfSmallPlanet;
+    bool isEnableToRotateTowardCamera;
 
     [SerializeField] ReactiveProperty<float> cameraRotProperty = new ReactiveProperty<float>();
     public override bool IsGround { get => isGround; }
     public Camera MainCamera { get => mainCamera; }
     public bool IsOnlyMoveToSide { get => isOnlyMoveToSide; }
 
+    [Serializable]
+    private struct FootSeSet
+    {
+        public LayerMask groundLayer;
+        public AudioClip footSe;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        gravityNormalProperty.Pairwise().Where(pair => Vector3.Angle(pair.Previous, pair.Current) == 90).Subscribe(async async => {
+            isEnableToRotateTowardCamera = false;
+            await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
+            isEnableToRotateTowardCamera = true;
+        });
         pov = playerVirtualCamera.GetCinemachineComponent<CinemachinePOV>();
         isMovable = true;
+        isEnableToRotateTowardCamera = true;
         //キーボード、コントローラーの操作の入力が変化した際に動く方向を設定する。
         inputManager.DirectionInput.Where(_ => isMovable && !isOnlyMoveToSide).Subscribe(input => GetAdjustedVector(input)).AddTo(this);
 
@@ -56,9 +73,9 @@ public class PlayerMover : Movable
         inputManager.DirectionInput.Where(_ => isMovable && isOnlyMoveToSide).Subscribe(input => GetAdjustedVector(new Vector3(input.x, 0f, 0f))).AddTo(this);
 
         //カメラに合わせて回転
-        cameraRotProperty.Where(_ => isMovable && !isOnlyMoveToSide)
-            .Where(_ => gravity.Planet == null || !gravity.Planet.IsSmall || isOnSideOfSmallPlanet)
-            .Subscribe(cameraRot =>
+        cameraRotProperty.Where(_ => isMovable && !isOnlyMoveToSide && isEnableToRotateTowardCamera)
+            .Where(_ => gravity.Planet == null || gravity.Planet.PlanetTypeParam != Planet.PlanetType.SmallBox)
+            .Subscribe(_ =>
         {
             GetAdjustedVector(inputManager.DirectionInput.Value);
         });
@@ -71,6 +88,14 @@ public class PlayerMover : Movable
 
         //プレイヤーが死んでゲームがリスタートした時に横スクロールモードを解除する
         GameManager.Instance.OnPlayerRestartObservable.Subscribe(_ => isOnlyMoveToSide = false);
+
+        //会話が始まったらプレイヤーを動かなくする
+        DialogueManager.Instance.OnDialogueStartObservable.Subscribe(_ => GoToImmovable()).AddTo(gameObject);
+
+        //会話が終わったらプレイヤーを動けるようにする
+        DialogueManager.Instance.OnDialogueEndObservable.Delay(TimeSpan.FromSeconds(0.1f)).Subscribe(_ => GoToMovable()).AddTo(gameObject);
+
+        groundChecker.LayerMaskProperty.Subscribe(layerMask => SetFootSe(layerMask)).AddTo(gameObject);
 
     }
 
@@ -89,15 +114,15 @@ public class PlayerMover : Movable
     // Update is called once per frame
     public void UpdateMove()
     {
+        gravityNormalProperty.Value = gravity.NormalVec;
         cameraRotProperty.Value = pov.m_HorizontalAxis.Value;
-        isOnSideOfSmallPlanet = gravity.Planet != null && gravity.Planet.IsSmall && Vector3.Dot(transform.up, Vector3.up) != verticalDot;
         //接地状態の時
         if (groundChecker.IsGround)
         {
             //ジャンプボタンが押されたときゲームがポーズしていなくてプレイヤーが動ける状態ならジャンプ
             if (inputManager.JumpInput.Value && !GameManager.Instance.IsPausing && isMovable)
             {
-                var jumpTask = Jump();
+                Jump();
             }
         }
        
@@ -108,10 +133,7 @@ public class PlayerMover : Movable
         {
             if (moveDirection.magnitude > 0)
             {
-                
-
                 rb.MovePosition(rb.position + transform.forward * moveSpeed * Time.deltaTime); //入力により向いた方向に進む
-
             }
         }
 
@@ -141,6 +163,7 @@ public class PlayerMover : Movable
     /// </summary>
     public void InitializeVector()
     {
+        DebugLog.Log("入力を初期化");
         GetAdjustedVector(Vector3.zero);
     }
 
@@ -150,6 +173,7 @@ public class PlayerMover : Movable
     /// <param name="input"></param>
     void GetAdjustedVector(Vector3 input)
     {
+        DebugLog.Log(input.ToString());
         DecideAxis();
         //地面の垂線とbasedVectorとの外積を移動軸の右方向とする
         right = Vector3.Cross(gravity.NormalVec, basedVector).normalized;
@@ -178,7 +202,7 @@ public class PlayerMover : Movable
     void DecideAxis()
     {
 
-        planetIsSmallBox = gravity.PlanetObj != null && gravity.Planet.IsSmall;
+        planetIsSmallBox = gravity.PlanetObj != null && gravity.Planet.PlanetTypeParam == Planet.PlanetType.SmallBox;
         //地面の垂線とカメラの向いている方向とがほぼ平行(カメラがプレイヤーの真上にある)の場合は
         //gravity.NormalVecとカメラの上方向との外積を進行ベクトルの右方向として定義する
         if (Vector3.Dot(gravity.NormalVec, mainCamera.transform.forward) < -parallelThreshould)
@@ -210,15 +234,20 @@ public class PlayerMover : Movable
     /// 接地している場合にジャンプ入力をすることでジャンプさせる
     /// </summary>
 
-    async UniTask Jump()
+    public void Jump()
     {
 
         audioSource.PlayOneShot(jumpAudioclip);
         groundChecker.DisableToCheckGround();
         rb.AddForce(transform.up * jumpPower, ForceMode.Impulse);
-        await UniTask.WaitUntil(() => isGround);
-        audioSource.PlayOneShot(footAudioClip);
        
+    }
+
+    public void AttackJump()
+    {
+        DebugLog.Log("攻撃ジャンプ");
+        rb.AddForce(transform.up * attackJumpPower, ForceMode.Impulse);
+        audioSource.PlayOneShot(stepOnAudioClip);
     }
 
     /// <summary>
@@ -231,8 +260,41 @@ public class PlayerMover : Movable
 
     }
 
+    private void SetFootSe(string layerName)
+    {
+        // ヒットしたレイヤー名からレイヤー番号を取得
+        int layerIndex = LayerMask.NameToLayer(layerName);
+
+        // 見つかった要素を格納する変数
+        FootSeSet foundSeSet = default;
+        bool found = false;
+
+        // footSeSetsの各要素をループして比較
+        foreach (var footSeSet in footSeSets)
+        {
+            // ビット演算を使用して、レイヤーマスクにヒットしたレイヤーが含まれているかを確認
+            if (((1 << layerIndex) & footSeSet.groundLayer) != 0)
+            {
+                foundSeSet = footSeSet;
+                found = true;
+                break; // 一致するものが見つかったらループを抜ける
+            }
+        }
+
+        if (found)
+        {
+            footAudioClip = foundSeSet.footSe;
+        }
+        else
+        {
+            Debug.LogWarning($"足音のオーディオクリップが、レイヤー名 '{layerName}' に一致する要素で見つかりませんでした。");
+            // デフォルトの足音を鳴らすなどのフォールバック処理
+        }
+    }
+
     public override void GoToMovable()
     {
+        DebugLog.Log("動けるように");
         isMovable = true;
         InitializeVector();
     }
